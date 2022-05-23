@@ -37,7 +37,7 @@ var generatePassword = function () {
   // determine how many times to repeat random function based on length selection
       // randomly determine what type to generate (lowercase/uppercase/number/specialChar)
 
-      return passwordProperties.pass;
+      return "Test";
 }
 
 
