@@ -52,8 +52,6 @@ var pwdProperties = {
 
   // check to ensure not all properties are false
   checkProperties: function() {
-    console.log(this);
-
     if (
       this.hasLowercases == false &&
       this.hasUppercases == false &&
