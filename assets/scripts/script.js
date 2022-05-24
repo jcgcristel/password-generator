@@ -23,21 +23,76 @@ var passwordProperties = {
   pass: ""
 }
 
+var rng = function(min, max) {
+  var value = Math.floor(Math.random() * max) + min;
+
+  return value;
+}
+
 // function to generate lowercase
+var genLowercase = function() {
+  var letters = "abcdefghijklmnopqrstuvwxyz";
+
+  return letters[rng(0, letters.length - 1)];
+}
 
 // function to generate uppercase
+var genUppercase = function() {
+  return genLowercase().toUpperCase();
+}
 
 // function to generate number
+var genNumber = function() {
+  return String(rng(0, 9));
+}
 
 // function to generate special character
+var genSpecialChar = function() {
+  var character = " !\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~"
+
+  return character[rng(0, character.length - 1)];
+}
 
 // Assignment code here
 var generatePassword = function () {  
+  var length = 10;
+
+  var password = "";
   // password criteria 8 - 128 characters
   // determine how many times to repeat random function based on length selection
-      // randomly determine what type to generate (lowercase/uppercase/number/specialChar)
+  for (i = 0; i < length; i++) {
+    // randomly determine what type to generate (lowercase/uppercase/number/specialChar)
+    var type = rng(1, 4)
 
-      return "Test";
+    switch (type){
+      // lowercase
+      case 1:
+        password += genLowercase();
+        break;
+        
+      // uppercase
+      case 2:
+        password += genUppercase();
+        break;
+        
+      // number
+      case 3:
+        password += genNumber();
+        break;
+        
+      // special character
+      case 4:
+        password += genSpecialChar();
+        break;
+        
+      // for whatever reason the rng generates anything but a 1, 2, 3, 4
+      default:
+        password += genLowercase();
+        break;
+        
+    }
+  }
+      return password;
 }
 
 
