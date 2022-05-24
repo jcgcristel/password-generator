@@ -14,13 +14,55 @@
 // WHEN the password is generated
 // THEN the password is either displayed in an alert or written to the page
 
-var passwordProperties = {
+var pwdProperties = {
   length: 8, // 8 to 128 characters
-  hasLowercase: false,
-  hasUppercase: false,
-  hasNumber: false,
-  hasSpecialChars: false,
-  pass: ""
+  hasLowercases: true,
+  hasUppercases: true,
+  hasNumbers: true,
+  hasSpecialChars: true,
+  password: "",
+
+  // functions
+  setLength: function() {
+    var length = window.prompt("How many characters do you want your password (8 to 128) to be?");
+    
+    if (length >= 8 && length <= 128){
+      this.length = length;
+    }
+    else {
+      window.alert("Invalid input. Please use a number between 8 and 128.");
+      this.setLength();
+    }
+  },
+
+  // determine characteristics of password
+  setPwdCharactertistics: function() {
+    // lowercases?
+    pwdProperties.hasLowercases = window.confirm("Do you want your password to account for LOWERCASES?");
+
+    // uppercases?
+    pwdProperties.hasUppercases = window.confirm("Do you want your password to account for UPPERCASES?")
+
+    // numbers?'
+    pwdProperties.hasNumbers = window.confirm("Do you want your password to account for NUMBERS?");
+    
+    // special characters?
+    pwdProperties.hasSpecialChars = window.confirm("Do you want your password to account for SPECIAL CHARACTERS?");
+  },
+
+  // check to ensure not all properties are false
+  checkProperties: function() {
+    console.log(this);
+
+    if (
+      this.hasLowercases == false &&
+      this.hasUppercases == false &&
+      this.hasNumbers == false &&
+      this.hasSpecialChars == false) {
+        window.alert("You must at least agree to have one property of having lowercases, uppercases, numbers, or special characters. Please try again.")
+        this.setPwdCharactertistics();
+      }
+  }
 }
 
 var rng = function(min, max) {
@@ -53,46 +95,68 @@ var genSpecialChar = function() {
   return character[rng(0, character.length - 1)];
 }
 
-// Assignment code here
-var generatePassword = function () {  
-  var length = 10;
+// function to generate a character to specifications
+var generateCharacter = function() {
+  var type = rng(1, 4)
 
-  var password = "";
-  // password criteria 8 - 128 characters
-  // determine how many times to repeat random function based on length selection
-  for (i = 0; i < length; i++) {
-    // randomly determine what type to generate (lowercase/uppercase/number/specialChar)
-    var type = rng(1, 4)
+  switch (type){
+    // lowercase
+    case 1:
+      // will rerun function if lowercases are not part of the criteria
+      if (pwdProperties.hasLowercases == false) {
+        generateCharacter();
+        break;
+      }
+      pwdProperties.password += genLowercase();
+      break;
+      
+    // uppercase
+    case 2:
+      // will rerun function if uppercases are not part of the criteria
+      if (pwdProperties.hasUppercases == false) {
+        generateCharacter();
+        break;
+      }
+      pwdProperties.password += genUppercase();
+      break;
+      
+    // number
+    case 3:
+      // will rerun function if numbers are not part of the criteria
+      if (pwdProperties.hasNumbers == false) {
+        generateCharacter();
+        break;
+      }
 
-    switch (type){
-      // lowercase
-      case 1:
-        password += genLowercase();
+      pwdProperties.password += genNumber();
+      break;
+      
+    // special character
+    case 4:
+      // will rerun function if special characters are not part of the criteria
+      if (pwdProperties.hasSpecialChars == false) {
+        generateCharacter();
         break;
-        
-      // uppercase
-      case 2:
-        password += genUppercase();
-        break;
-        
-      // number
-      case 3:
-        password += genNumber();
-        break;
-        
-      // special character
-      case 4:
-        password += genSpecialChar();
-        break;
-        
-      // for whatever reason the rng generates anything but a 1, 2, 3, 4
-      default:
-        password += genLowercase();
-        break;
-        
-    }
+      }
+
+      pwdProperties.password += genSpecialChar();
+      break;
   }
-      return password;
+}
+
+
+var generatePassword = function () {
+  pwdProperties.password = ""; // reset password
+  pwdProperties.setLength();
+  pwdProperties.setPwdCharactertistics();
+  pwdProperties.checkProperties();
+
+  // determine how many times to repeat random function based on length selection
+  for (i = 0; i < pwdProperties.length; i++) {
+    generateCharacter();    
+  }
+
+      return pwdProperties.password;
 }
 
 
